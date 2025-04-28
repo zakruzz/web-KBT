@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sparetech - Checkout</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100">
+  <!-- Navbar -->
+  <nav class="bg-white text-black p-2 fixed w-full top-0 z-50 shadow-md">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="flex items-center">
+        <img src="Sparetech_logo.png" alt="Sparetech Logo" class="navbar-logo mr-2">
+        <a href="index.html" class="text-xl font-bold hover:bg-gray-400">Sparetech</a>
+      </div>
+      <div class="md:hidden">
+        <button id="menu-toggle" class="focus:outline-none">
+          <i class="fas fa-bars text-2xl"></i>
+        </button>
+      </div>
+      <ul id="nav-menu" class="hidden md:flex space-x-6 items-center">
+        <li><a href="etalase.html" class="hover:text-gray-400">Etalase Kami</a></li>
+        <li><a href="tentang.html" class="hover:text-gray-400">Tentang Kami</a></li>
+        <li><a href="auth.html" class="hover:text-gray-400">Login</a></li>
+        <li><a href="auth.html" class="bg-grey-100 text-black px-4 py-2 rounded hover:bg-gray-400">Register</a></li>
+        <li>
+          <button id="cart-toggle" class="focus:outline-none">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="cart-count" class="bg-red-500 text-white rounded-full px-2 py-1 text-xs">0</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-blue-700 p-4">
+      <ul class="space-y-4">
+        <li><a href="etalase.html" class="block hover:text-gray-200">Etalase Kami</a></li>
+        <li><a href="tentang.html" class="block hover:text-gray-200">Tentang Kami</a></li>
+        <li><a href="auth.html" class="block hover:text-gray-200">Login</a></li>
+        <li><a href="auth.html" class="block bg-white text-blue-600 px-4 py-2 rounded hover:bg-gray-200 text-center">Register</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Cart Sidebar -->
+  <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform translate-x-full transition-transform duration-300 z-50">
+    <div class="p-4">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold">Keranjang Belanja</h2>
+        <button id="cart-close" class="focus:outline-none">
+          <i class="fas fa-times text-2xl"></i>
+        </button>
+      </div>
+      <div id="cart-items" class="space-y-4">
+        <!-- Cart items will be dynamically added here -->
+      </div>
+      <a href="cart.html" class="block bg-blue-600 text-white text-center py-2 rounded mt-4 hover:bg-blue-700">Checkout</a>
+    </div>
+  </div>
+
+  <!-- Checkout Section -->
+  <section class="pt-24 pb-12 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <h1 class="text-3xl font-bold mb-8 text-center">Checkout</h1>
+      <div class="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
+        <form id="checkout-form">
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Nama Penerima</label>
+            <input type="text" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Alamat Pengiriman</label>
+            <textarea class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600" required></textarea>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Nomor Telepon</label>
+            <input type="tel" class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+          </div>
+          <div class="mb-4">
+            <label class="block text-sm font-medium mb-1">Metode Pembayaran</label>
+            <select class="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+              <option value="cod">COD (Bayar di Tempat)</option>
+              <option value="transfer">Transfer Bank</option>
+            </select>
+          </div>
+          <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">Checkout</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-8">
+    <div class="container mx-auto text-center">
+        <p class="text-lg mb-2">Sparetech &copy; 2025. All Rights Reserved.</p>
+        <p class="text-sm">Kontak: <a href="mailto:info@sparetech.com" class="hover:text-gray-300">info@sparetech.com</a></p>
+    </div>
+    <div class="container mx-auto text-center py-8">
+      <div class="flex justify-center space-x-6">
+        <a href="https://facebook.com" target="_blank" class="text-2xl hover:text-blue-400 transition">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a href="https://twitter.com" target="_blank" class="text-2xl hover:text-blue-400 transition">
+          <i class="fab fa-twitter"></i>
+        </a>
+        <a href="https://instagram.com" target="_blank" class="text-2xl hover:text-blue-400 transition">
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a href="https://linkedin.com" target="_blank" class="text-2xl hover:text-blue-400 transition">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    document.getElementById("checkout-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      localStorage.removeItem("cart"); // Clear cart after checkout
+      window.location.href = "success.html";
+    });
+  </script>
+</body>
+</html>

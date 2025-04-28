@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sparetech - Checkout Berhasil</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-lg shadow-lg text-center max-w-md w-full">
+    <h1 class="text-2xl font-bold mb-4">Checkout Berhasil!</h1>
+    <p class="text-lg mb-4">Terima kasih atas pembelian Anda. Anda akan diarahkan ke beranda dalam <span id="countdown">15</span> detik.</p>
+    <a href="index.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Kembali ke Beranda</a>
+  </div>
+  <script>
+    let time = 15;
+    const countdown = document.getElementById("countdown");
+    const timer = setInterval(() => {
+      time--;
+      countdown.textContent = time;
+      if (time <= 0) {
+        clearInterval(timer);
+        window.location.href = "index.html";
+      }
+    }, 1000);
+  </script>
+</body>
+</html>
