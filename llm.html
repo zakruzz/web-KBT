@@ -6,7 +6,7 @@
   <title>LLM AI Chat - Sparetech</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <!-- Versi UMD browser -->
+  <!-- Gunakan versi UMD -->
   <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.0/dist/transformers.min.umd.js"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-blue-900 min-h-screen text-white flex flex-col items-center justify-center p-6">
@@ -14,40 +14,39 @@
   <div class="bg-white text-black rounded-lg shadow-lg w-full max-w-md p-6 space-y-4">
     <h2 class="text-2xl font-bold text-center">🤖 Chat dengan AI Sparetech</h2>
     <div id="chatbox" class="h-64 overflow-y-auto border rounded p-3 bg-gray-100 text-black space-y-2">
-      <p class="text-sm text-gray-500">AI: Halo! Saya adalah asisten AI Sparetech. Ada yang bisa saya bantu?</p>
+      <p id="loading-msg" class="text-sm text-gray-500">🔄 Memuat model AI...</p>
     </div>
     <div class="flex space-x-2">
-      <input id="user-input" type="text" placeholder="Tulis pertanyaan..." class="flex-1 px-4 py-2 rounded border" />
-      <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Kirim</button>
+      <input id="user-input" type="text" placeholder="Tulis pertanyaan..." class="flex-1 px-4 py-2 rounded border" disabled />
+      <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded" disabled>Kirim</button>
     </div>
     <div class="flex justify-between text-sm mt-4">
-      <a href="https://wa.me/6281234567890" target="_blank" class="text-green-600 hover:underline">💬 Hubungi WhatsApp</a>
-      <a href="index.html" class="text-blue-600 hover:underline">🔙 Kembali ke Beranda</a>
+      <a href="https://wa.me/6281234567890" target="_blank" class="text-green-600 hover:underline">💬 WhatsApp</a>
+      <a href="index.html" class="text-blue-600 hover:underline">🔙 Beranda</a>
     </div>
   </div>
 
   <script>
-    // GSAP animation
-    gsap.from("h2", { y: -50, opacity: 0, duration: 1 });
-    gsap.from("#chatbox", { opacity: 0, delay: 0.5, duration: 1 });
-    gsap.from("#user-input", { x: -100, opacity: 0, delay: 0.8 });
-    gsap.from("#send-btn", { x: 100, opacity: 0, delay: 0.8 });
-
     let chatPipeline;
+    const inputField = document.getElementById("user-input");
+    const sendBtn = document.getElementById("send-btn");
+    const chatbox = document.getElementById("chatbox");
+    const loadingMsg = document.getElementById("loading-msg");
 
     async function setupLLM() {
-      // Load pipeline dari Transformers.js
-      chatPipeline = await window.transformers.pipeline(
-        "text-generation",
-        "Xenova/distilgpt2"
-      );
+      try {
+        chatPipeline = await window.transformers.pipeline("text-generation", "Xenova/distilgpt2");
+        inputField.disabled = false;
+        sendBtn.disabled = false;
+        loadingMsg.remove();
+        chatbox.innerHTML += `<p class="text-sm text-gray-500">✅ Model siap! Silakan bertanya.</p>`;
+      } catch (err) {
+        console.error("❌ Gagal memuat model:", err);
+        loadingMsg.textContent = "❌ Gagal memuat model. Coba refresh halaman.";
+      }
     }
 
-    setupLLM();
-
-    document.getElementById("send-btn").addEventListener("click", async () => {
-      const inputField = document.getElementById("user-input");
-      const chatbox = document.getElementById("chatbox");
+    sendBtn.addEventListener("click", async () => {
       const userInput = inputField.value.trim();
       if (!userInput || !chatPipeline) return;
 
@@ -55,11 +54,25 @@
       inputField.value = "";
       chatbox.scrollTop = chatbox.scrollHeight;
 
-      const output = await chatPipeline(userInput, { max_new_tokens: 50 });
-      const reply = output[0].generated_text.replace(userInput, "").trim();
+      try {
+        const output = await chatPipeline(userInput, { max_new_tokens: 50 });
+        const reply = output[0].generated_text.replace(userInput, "").trim();
+        chatbox.innerHTML += `<p class="text-gray-700">AI: ${reply || "Maaf, saya tidak paham."}</p>`;
+      } catch (err) {
+        chatbox.innerHTML += `<p class="text-red-500">❌ Terjadi kesalahan saat menjawab.</p>`;
+        console.error(err);
+      }
 
-      chatbox.innerHTML += `<p class="text-gray-700">AI: ${reply || "Maaf, saya tidak paham."}</p>`;
       chatbox.scrollTop = chatbox.scrollHeight;
+    });
+
+    // Jalankan setelah semua load
+    window.addEventListener("DOMContentLoaded", () => {
+      setupLLM();
+      gsap.from("h2", { y: -50, opacity: 0, duration: 1 });
+      gsap.from("#chatbox", { opacity: 0, delay: 0.5, duration: 1 });
+      gsap.from("#user-input", { x: -100, opacity: 0, delay: 0.8 });
+      gsap.from("#send-btn", { x: 100, opacity: 0, delay: 0.8 });
     });
   </script>
 </body>
