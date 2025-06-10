@@ -27,24 +27,26 @@
   </div>
 
   <script>
-    let chatPipeline;
-    const inputField = document.getElementById("user-input");
-    const sendBtn = document.getElementById("send-btn");
-    const chatbox = document.getElementById("chatbox");
-    const loadingMsg = document.getElementById("loading-msg");
+let chatPipeline;
+const inputField = document.getElementById("user-input");
+const sendBtn = document.getElementById("send-btn");
+const chatbox = document.getElementById("chatbox");
+const loadingMsg = document.getElementById("loading-msg");
 
     async function setupLLM() {
-      try {
-        chatPipeline = await window.transformers.pipeline("text-generation", "Xenova/distilgpt2");
-        inputField.disabled = false;
-        sendBtn.disabled = false;
-        loadingMsg.remove();
-        chatbox.innerHTML += `<p class="text-sm text-gray-500">✅ Model siap! Silakan bertanya.</p>`;
-      } catch (err) {
-        console.error("❌ Gagal memuat model:", err);
-        loadingMsg.textContent = "❌ Gagal memuat model. Coba refresh halaman.";
-      }
-    }
+  try {
+    const pipeline = window.Transformers.pipeline;
+    chatPipeline = await pipeline("text-generation", "Xenova/distilgpt2");
+
+    inputField.disabled = false;
+    sendBtn.disabled = false;
+    loadingMsg.remove();
+    chatbox.innerHTML += `<p class="text-sm text-gray-500">✅ Model siap! Silakan bertanya.</p>`;
+  } catch (err) {
+    console.error("❌ Gagal memuat model:", err);
+    loadingMsg.textContent = "❌ Gagal memuat model. Coba refresh halaman.";
+  }
+}
 
     sendBtn.addEventListener("click", async () => {
       const userInput = inputField.value.trim();
