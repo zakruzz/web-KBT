@@ -6,7 +6,8 @@
   <title>LLM AI Chat - Sparetech</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.6.0/dist/transformers.min.js"></script>
+  <!-- Versi UMD browser -->
+  <script src="https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.0/dist/transformers.min.umd.js"></script>
 </head>
 <body class="bg-gradient-to-br from-gray-900 to-blue-900 min-h-screen text-white flex flex-col items-center justify-center p-6">
   
@@ -32,26 +33,30 @@
     gsap.from("#user-input", { x: -100, opacity: 0, delay: 0.8 });
     gsap.from("#send-btn", { x: 100, opacity: 0, delay: 0.8 });
 
-    let pipeline;
+    let chatPipeline;
 
-    async function setup() {
-      pipeline = await window.transformers.pipeline("text-generation", "Xenova/distilgpt2");
+    async function setupLLM() {
+      // Load pipeline dari Transformers.js
+      chatPipeline = await window.transformers.pipeline(
+        "text-generation",
+        "Xenova/distilgpt2"
+      );
     }
 
-    setup();
+    setupLLM();
 
     document.getElementById("send-btn").addEventListener("click", async () => {
       const inputField = document.getElementById("user-input");
       const chatbox = document.getElementById("chatbox");
       const userInput = inputField.value.trim();
-      if (!userInput) return;
+      if (!userInput || !chatPipeline) return;
 
       chatbox.innerHTML += `<p class="text-right text-blue-600">Kamu: ${userInput}</p>`;
       inputField.value = "";
       chatbox.scrollTop = chatbox.scrollHeight;
 
-      const response = await pipeline(userInput, { max_new_tokens: 40 });
-      const reply = response[0]?.generated_text.replace(userInput, "").trim();
+      const output = await chatPipeline(userInput, { max_new_tokens: 50 });
+      const reply = output[0].generated_text.replace(userInput, "").trim();
 
       chatbox.innerHTML += `<p class="text-gray-700">AI: ${reply || "Maaf, saya tidak paham."}</p>`;
       chatbox.scrollTop = chatbox.scrollHeight;
