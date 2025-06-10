@@ -26,56 +26,49 @@
     </div>
   </div>
 
-  <script>
-let chatPipeline;
-const inputField = document.getElementById("user-input");
-const sendBtn = document.getElementById("send-btn");
-const chatbox = document.getElementById("chatbox");
-const loadingMsg = document.getElementById("loading-msg");
+  <script type="module">
+  import { pipeline } from "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.5.0";
 
-    async function setupLLM() {
-  try {
-    const pipeline = window.Transformers.pipeline;
-    chatPipeline = await pipeline("text-generation", "Xenova/distilgpt2");
+  let chatPipeline;
+  const inputField = document.getElementById("user-input");
+  const sendBtn = document.getElementById("send-btn");
+  const chatbox = document.getElementById("chatbox");
+  const loadingMsg = document.getElementById("loading-msg");
 
-    inputField.disabled = false;
-    sendBtn.disabled = false;
-    loadingMsg.remove();
-    chatbox.innerHTML += `<p class="text-sm text-gray-500">✅ Model siap! Silakan bertanya.</p>`;
-  } catch (err) {
-    console.error("❌ Gagal memuat model:", err);
-    loadingMsg.textContent = "❌ Gagal memuat model. Coba refresh halaman.";
+  async function setupLLM() {
+    try {
+      chatPipeline = await pipeline("text-generation", "Xenova/distilgpt2");
+      inputField.disabled = false;
+      sendBtn.disabled = false;
+      loadingMsg.remove();
+      chatbox.innerHTML += `<p class="text-sm text-gray-500">✅ Model siap! Silakan bertanya.</p>`;
+    } catch (err) {
+      console.error("❌ Gagal memuat model:", err);
+      loadingMsg.textContent = "❌ Gagal memuat model. Coba refresh halaman.";
+    }
   }
-}
 
-    sendBtn.addEventListener("click", async () => {
-      const userInput = inputField.value.trim();
-      if (!userInput || !chatPipeline) return;
+  sendBtn.addEventListener("click", async () => {
+    const userInput = inputField.value.trim();
+    if (!userInput || !chatPipeline) return;
 
-      chatbox.innerHTML += `<p class="text-right text-blue-600">Kamu: ${userInput}</p>`;
-      inputField.value = "";
-      chatbox.scrollTop = chatbox.scrollHeight;
+    chatbox.innerHTML += `<p class="text-right text-blue-600">Kamu: ${userInput}</p>`;
+    inputField.value = "";
+    chatbox.scrollTop = chatbox.scrollHeight;
 
-      try {
-        const output = await chatPipeline(userInput, { max_new_tokens: 50 });
-        const reply = output[0].generated_text.replace(userInput, "").trim();
-        chatbox.innerHTML += `<p class="text-gray-700">AI: ${reply || "Maaf, saya tidak paham."}</p>`;
-      } catch (err) {
-        chatbox.innerHTML += `<p class="text-red-500">❌ Terjadi kesalahan saat menjawab.</p>`;
-        console.error(err);
-      }
+    try {
+      const output = await chatPipeline(userInput, { max_new_tokens: 50 });
+      const reply = output[0].generated_text.replace(userInput, "").trim();
+      chatbox.innerHTML += `<p class="text-gray-700">AI: ${reply || "Maaf, saya tidak paham."}</p>`;
+    } catch (err) {
+      chatbox.innerHTML += `<p class="text-red-500">❌ Terjadi kesalahan saat menjawab.</p>`;
+      console.error(err);
+    }
 
-      chatbox.scrollTop = chatbox.scrollHeight;
-    });
+    chatbox.scrollTop = chatbox.scrollHeight;
+  });
 
-    // Jalankan setelah semua load
-    window.addEventListener("DOMContentLoaded", () => {
-      setupLLM();
-      gsap.from("h2", { y: -50, opacity: 0, duration: 1 });
-      gsap.from("#chatbox", { opacity: 0, delay: 0.5, duration: 1 });
-      gsap.from("#user-input", { x: -100, opacity: 0, delay: 0.8 });
-      gsap.from("#send-btn", { x: 100, opacity: 0, delay: 0.8 });
-    });
-  </script>
+  setupLLM();
+</script>
 </body>
 </html>
